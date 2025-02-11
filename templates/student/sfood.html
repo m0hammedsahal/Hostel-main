@@ -1,0 +1,221 @@
+{% extends 'base/web-base.html' %}
+{% load static %}
+{% block container %}
+
+    <style>
+        .food-form {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .days-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        }
+
+        .day-card {
+        margin: 20px;
+        padding: 20px;
+        width: calc(33.33% - 40px);
+        background-color: #fff;
+        border: 1px solid #ddd;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .day-header {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        }
+
+        .food-options {
+        display: flex;
+        flex-direction: column;
+        }
+
+        .food-option {
+        margin-bottom: 10px;
+        }
+
+        .food-option input[type="checkbox"] {
+        margin-right: 10px;
+        }
+
+        .submit-button {
+        background-color: #4CAF50;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        }
+
+        .submit-button:hover {
+        background-color: #3e8e41;
+        }
+
+
+        .selected-meals {
+        display: none;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border: 1px solid #ddd;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+        }
+
+    </style>
+
+    <section class="w-full min-h-[100vh]  h-auto bg-blue-100 pb-6">
+        <section class="w-[90%] mx-auto">
+            <h1 class="font-bold text-[35px] text-blue-950 pt-8">FOOD COUNT</h1>
+            <div class="w-full min-h-[500px] h-auto mb-7 pb-10 bg-green-50 rounded-2xl mt-6 px-5">
+                <h3 class="pt-3 font-semibold text-[25px] text-blue-950 mb-4">Add Count:</h3>
+               <br>
+               <form class="max-w-7xl mx-auto p-4" method="post" id="food-form" action="">
+                {% csrf_token %}
+                <h2 class="text-2xl font-bold mb-4">Select Your Meals</h2>
+                <div class="grid grid-cols-7 gap-4 mb-3">
+                  {% for day in days %}
+                    <div class="bg-white rounded-xl shadow-md p-4">
+                      <h3 class="text-lg font-bold text-center mb-2">{{ day.name }}</h3>
+                      <ul>
+                        {% for food in food_selections %}
+                          {% if food.day == day %}
+                            <li class="flex justify-between items-center p-2 border-b border-gray-200">
+                              <label for="eveningsnaks" class="block my-3 ml-2">{{ food.get_meal_display }}</label>
+                              <input type="checkbox" value="{{ food.id }}" class="eveningsnaks w-5 rounded-full" style="width: 20px;">
+                            </li>
+                          {% endif %}
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% endfor %}
+                </div>
+                <div class="selected-meals mt-4" id="selected-meals">
+                  <h2 class="text-lg font-bold mb-2">Your Meals Selected</h2>
+                  <ul id="selected-meals-list" class="list-none p-0 m-0">
+                    <!-- Selected meals will be listed here -->
+                  </ul>
+                </div>
+                <button type="submit" id="subfood" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">Submit</button>
+              </form>
+              
+
+                <button id="viewmenu" class="pl-1 font-semibold w-[4cm]   bg-blue-500 text-white h-[1cm] mt-10 mr-6 py-1 rounded-lg hover:bg-blue-600">View menu</button>
+                <button id="viewcancel" class="pl-1 hidden font-semibold w-[4cm]   bg-red-500 text-white h-[1cm] mt-10 mr-6 py-1 rounded-lg hover:bg-red-600">cancel</button>
+                <div class="popmenu hidden mt-16 ">
+                    <div class=" flex justify-around flex-wrap">
+                        {% for instance in instances %}
+                        <div class="  w-[23%] mb-5 min-h-[300px] h-auto border-[#3817176d] rounded-xl border-2">
+                            <h3 class="text-center font font-semibold  text-[20px]">{{instance.day}}</h3>
+                            <h3 class="font text-[15px]">{{instance.breakfast}}</h3>
+                            <h3 class="font text-[15px]">{{instance.lunch}}</h3>
+                            <h3 class="font text-[15px]">{{instance.eveningsnaks}}</h3>
+                            <h3 class="font text-[15px]">{{instance.dinner}}</h3>
+                         </div>
+                         {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <script>
+       document.addEventListener("DOMContentLoaded", function() {
+        // Get references to the buttons and the popmenu div
+        const viewMenuButton = document.getElementById("viewmenu");
+        const cancelButton = document.getElementById("viewcancel");
+        const popMenuDiv = document.querySelector(".popmenu");
+
+        // Event listener for the "View menu" button
+        viewMenuButton.addEventListener("click", function() {
+            // Show the cancel button and the popmenu div
+            cancelButton.classList.remove("hidden");
+            popMenuDiv.classList.remove("hidden");
+        });
+
+        // Event listener for the "cancel" button
+        cancelButton.addEventListener("click", function() {
+            // Hide the cancel button and the popmenu div
+            cancelButton.classList.add("hidden");
+            popMenuDiv.classList.add("hidden");
+        });
+        });
+
+
+        const form = document.getElementById('food-form');
+        const selectedMealsSection = document.getElementById('selected-meals');
+        const selectedMealsList = document.getElementById('selected-meals-list');
+
+        form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const checkedCheckboxes = [];
+        const uncheckedCheckboxes = [];
+
+        // Get all checkboxes
+        const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+
+        // Loop through checkboxes
+        checkboxes.forEach((checkbox) => {
+            if (checkbox.checked) {
+            checkedCheckboxes.push(checkbox.value);
+            } else {
+            uncheckedCheckboxes.push(checkbox.value);
+            }
+        });
+
+        // Send checked and unchecked checkboxes to Django view
+        const formData = new FormData();
+        formData.append('checkedCheckboxes', checkedCheckboxes);
+        formData.append('uncheckedCheckboxes', uncheckedCheckboxes);
+        const subfood = document.getElementById('subfood');
+
+
+        fetch("{% url 'student:food_selection_submit' %}", {
+            method: 'POST',
+            headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: formData,
+        })
+        .then((response) => response.json())
+        .then((data) => console.log(data))
+        .catch((error) => console.error(error));
+
+        // Show selected meals section
+        selectedMealsSection.style.display = 'block';
+        subfood.style.display = 'none';
+
+        // Add selected meals to list
+        selectedMealsList.innerHTML = ''; // Clear the list
+        checkedCheckboxes.forEach((mealId) => {
+            const meal = document.querySelector(`label[for="food-${mealId}"]`).textContent;
+            const listItem = document.createElement('LI');
+            listItem.textContent = meal;
+            selectedMealsList.appendChild(listItem);
+        });
+        });
+
+
+
+
+    </script>
+
+
+
+{% endblock %}

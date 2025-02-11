@@ -1,0 +1,44 @@
+{% extends 'base/web-base.html' %}
+{% load static %}
+{% block container %}
+
+
+    <section class="w-full min-h-[100vh] h-full bg-blue-100 pb-6">
+        <section class="w-[90%] mx-auto">
+            <h1 class="font-bold text-[35px] text-blue-950 pt-8">CHECK IN-CHECK OUT </h1>
+            <div class="w-full h-[500px] bg-green-50 rounded-2xl mt-6 px-5">
+                <h3 class="pt-3 font-semibold text-blue-950 text-[25px] mb-4">Student status:</h3>
+                <br>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full border-collapse border border-gray-300 bg-white text-left text-sm text-gray-700">
+                        <thead>
+                            <tr class="bg-gray-200 text-gray-700">
+                                <th class="border border-gray-300  bg-blue-200 px-4 py-2">SINo</th>
+                                <th class="border border-gray-300  bg-blue-200 px-4 py-2">Name</th>
+                                <th class="border border-gray-300  bg-blue-200 px-4 py-2">Check In (date and time)</th>
+                                <th class="border border-gray-300  bg-blue-200 px-4 py-2">Check Out (date and time)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for instance in instances %}
+                            <tr>
+                                <td class="border border-gray-300 px-4 py-2 ">{{ forloop.counter }}</td>
+                                <td class="border border-gray-300 px-4 py-2 ">{{instance.student.user.student_name}}</td>          
+                                <td class="border border-gray-300 px-4 py-2 ">{% if instance.check_in %}{{ instance.check_in }}{% else %} {% endif %}</td>
+                                <td class="border border-gray-300 px-4 py-2 ">{% if instance.check_out %}{{ instance.check_out }}{% else %} {% endif %}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                              
+                
+            </div>
+                          
+        </section>
+    </section>
+
+   
+    
+
+    {% endblock %}

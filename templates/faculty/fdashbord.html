@@ -1,0 +1,29 @@
+{% extends 'base/web-base.html' %}
+{% load static %}
+{% block container %}
+
+
+    <section class="w-full min-h-screen h-auto pb-10 bg-gradient-to-t  from-[rgb(198,225,248)] to-[#79e5fb]">
+        <div class="header h-[10vh]     flex justify-end gap-4 pr-20 items-center">
+            <a class="text-[15px] font-semibold ml-6  hover:text-white " href="{% url 'faculty:fprofile' %}">Profile</a>
+            <a class="text-[15px] font-semibold ml-6  hover:text-white " href="{% url 'faculty:fupdatepass' %}">Update password</a>
+            <a class="text-[15px] font-semibold ml-6  hover:text-white " href="{% url 'web:logout' %}">Logout</a>
+        </div>
+        <div class="w-full h-auto">
+            <h1 class=" text-white font-bold text-center  text-[45px]">DASHBORD</h1>
+            <div class=" w-[75%]  mx-auto mt-[100px] flex gap-12 flex-wrap justify-around">
+                <a class=" h-[2cm] w-[9cm] block bg-orange-50 text-center pt-6 rounded-xl  hover:border-2 hover:border-blue-300 hover:shadow-lg  font-semibold text-[18px]]  " href="{% url 'faculty:ffood' %}">FOOD COUNT</a>
+                <a class=" h-[2cm] w-[9cm] block bg-orange-50 text-center pt-6 rounded-xl  hover:border-2 hover:border-blue-300 hover:shadow-lg  font-semibold text-[18px]]  " href="{% url 'faculty:fslot' %}">WASH SLOT DETAILS</a>
+                <a class=" h-[2cm] w-[9cm] block bg-orange-50 text-center pt-6 rounded-xl  hover:border-2 hover:border-blue-300 hover:shadow-lg  font-semibold text-[18px]]  " href="{% url 'faculty:ffee' %}">FEE STATUS</a>
+                <a class=" h-[2cm] w-[9cm] block bg-orange-50 text-center pt-6 rounded-xl  hover:border-2 hover:border-blue-300 hover:shadow-lg  font-semibold text-[18px]]  " href="{% url 'faculty:fcomplaint' %}">COMPLAINT CHECKING</a>
+
+                <a class=" h-[2cm] w-[9cm] block bg-orange-50 text-center pt-6 rounded-xl  hover:border-2 hover:border-blue-300 hover:shadow-lg  font-semibold text-[18px]]  " href="{% url 'faculty:fattendance' %}">ATTENDENCE</a>
+                <a class=" h-[2cm] w-[9cm] block bg-orange-50 text-center pt-6 rounded-xl  hover:border-2 hover:border-blue-300 hover:shadow-lg  font-semibold text-[18px]]  " href="{% url 'faculty:fcheck' %}">CHECK IN/CHECK OUT</a>
+                <a class=" h-[2cm] w-[9cm] block bg-orange-50 text-center pt-6 rounded-xl  hover:border-2 hover:border-blue-300 hover:shadow-lg  font-semibold text-[18px]]  " href="{% url 'faculty:falert' %}">SEND ALERTS</a>
+                <a class=" h-[2cm] w-[9cm] block bg-orange-50 text-center pt-6 rounded-xl  hover:border-2 hover:border-blue-300 hover:shadow-lg  font-semibold text-[18px]]  " href="{% url 'faculty:fnotification' %}">NOTIFICATION</a>
+                <a class=" h-[2cm] w-[9cm] block bg-orange-50 text-center pt-6 rounded-xl  hover:border-2 hover:border-blue-300 hover:shadow-lg  font-semibold text-[18px]]  " href="{% url 'faculty:fstudentadd' %}">ADD STUDENT </a>
+            </div>
+        </div>
+    </section>
+   
+{% endblock %}

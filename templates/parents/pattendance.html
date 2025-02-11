@@ -1,0 +1,51 @@
+{% extends 'base/web-base.html' %}
+{% load static %}
+{% block container %}
+
+
+    <section class="w-full min-h-[100vh] h-full bg-blue-100 pb-6">
+        <section class="w-[90%] mx-auto">
+            <h1 class="font-bold text-[35px] pt-8 text-blue-950">ATTENDANCE</h1>
+            <div class="w-full h-[500px] bg-green-50 rounded-2xl mt-6 px-5">
+                <h3 class="pt-3 font-semibold text-[25px] mb-4 text-blue-950">Attendance details:</h3>
+                
+                <br>
+
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full border-collapse border border-gray-300 bg-white text-left text-sm text-gray-700">
+                        <thead>
+                            <tr>
+                                <th class="border border-gray-300 bg-blue-200 px-6 py-3 text-gray-800 font-semibold">Name</th>
+                                <th class="border border-gray-300 bg-blue-200 px-6 py-3 text-gray-800 font-semibold">Date</th>
+                                <th class="border border-gray-300 bg-blue-200 px-6 py-3 text-gray-800 font-semibold">Attendance Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for attendance in instances %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="border border-gray-300 px-6 py-3">{{attendance.student.user.student_name}}</td>
+                                <td class="border border-gray-300 px-6 py-3">{{attendance.attendance_date}}</td>
+                                <td class="border border-gray-300 px-6 py-3">{{attendance.attendance_status}}</td>
+                            <tr class="hover:bg-gray-50">
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+
+
+                
+
+                
+                
+            </div>
+             
+                
+              
+        </section>
+    </section>
+
+
+
+    {% endblock %}

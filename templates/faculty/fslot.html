@@ -1,0 +1,38 @@
+{% extends 'base/web-base.html' %}
+{% load static %}
+{% block container %}
+
+    <section class="w-full min-h-[100vh] h-auto bg-blue-100  pb-4 ">
+        <section class="w-[90%] mx-auto">
+            <h1 class="font-bold text-[35px] pt-8  text-blue-950 ">SLOT CHECKING</h1>
+            <div class="w-full h-[500px] bg-green-50 rounded-2xl mt-6 px-5">
+                <h3 class="pt-3 font-semibold text-[25px] mb-4  text-blue-950 ">Slots details:</h3>
+
+                <table class="min-w-full border-collapse border border-gray-200">
+                 
+                    <thead class="bg-blue-200">
+                        <tr>
+                            <th class="border border-gray-300 px-4 py-2 text-left">S.No</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Time</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Name</th>
+                        </tr>
+                    </thead>
+                   
+                    <tbody class="bg-white">
+                        {% for instance in instances %}
+                        <tr>
+                            <td class="border border-gray-300 px-4 py-2">{{instance.slot_number}}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{instance.start_time}} - {{instance.end_time}}</td>
+                            <td class="border border-gray-300 px-4 py-2">{% if instance.booked_student %}{{instance.booked_student.user.student_name}}{% else %}Not Bokked{% endif %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                
+                
+            </div>
+        </section>
+    </section>
+   
+{% endblock %}
