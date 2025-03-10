@@ -8,7 +8,6 @@ from parents.views import pnotification
 app_name = "student"
 
 urlpatterns = [
-    path("index", views.index, name="index"),
     path("", views.sdashbord, name="sdashbord"),
     path("login/", views.login, name="login"),
     path('food/', views.sfood, name='sfood'),
@@ -22,12 +21,6 @@ urlpatterns = [
     path("fee/", pfee, name="sfee"),
     path("slot/", views.sslot, name="sslot"),
     path("book-slot/<pk>/", views.book_slot, name="book_slot"),
-
-
-    path("upupdatepass/", views.upupdatepass, name="upupdatepass"),
-    path("changepass/", views.schangepass, name="schangepass"),
-    path("forgetpass/", views.sforgetpass, name="sforgetpass"),
     path("profile/", views.sprofile, name="sprofile"),
-    path("updatepass/", views.supdatepass, name="supdatepass"),
     
 ]

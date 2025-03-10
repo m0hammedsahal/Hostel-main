@@ -28,6 +28,12 @@ from datetime import date
 from student.models import *
 from .models import *
 from .forms import *
+from main.decorators import allow_faculty
+
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+
+from django.db.models import Q
 
 
 def generate_unique_order_id(length=7):
@@ -43,15 +49,8 @@ def generate_register_id(previous_id=None):
     return current_id
 
 
-
-# @login_required(login_url='web:login') 
-def index(request):
-
-    context = {
-     
-    }
-    return render(request, 'index.html', context=context)
-
+@login_required(login_url='faculty:login')
+@allow_faculty
 def fdashbord(request):
     
 
@@ -61,41 +60,37 @@ def fdashbord(request):
     return render(request, 'faculty/fdashbord.html', context=context)
 
 
-
 def login(request):
     if request.method == 'POST':
         register_id = request.POST.get('register_id')
         password = request.POST.get('password')
-        users = User.objects.all()
-
-        for user in users:
-            userregister_id = user.register_id
-            userpassword = user.second_pass
-            print(userregister_id, userpassword)
-
-            if register_id in userregister_id and password in userpassword:
-                user = User.objects.get(register_id=register_id)
-                auth_login(request, user)
-                print('valid')
-                return HttpResponseRedirect(reverse('faculty:fdashbord'))
+        try:
+            user = User.objects.get(register_id=register_id)
+            if user.second_pass == password:
+                if user.is_faculty:
+                    auth_login(request, user)
+                    print('valid')
+                    return HttpResponseRedirect(reverse('faculty:fdashbord'))
+                else:
+                    context = {
+                        "error": True,
+                        "message": "You are not Faculty"
+                    }
+                    return render(request, 'parents/plogin.html', context=context)
             else:
-                print('invalid')
-                return render(request, 'faculty/flogin.html')
-
-        # user = authenticate(request, email=register_id, password=password)
-
-        # if user is not None:
-        #     auth_login(request, user)
-        #     return HttpResponseRedirect(reverse('faculty:fprofile'))
-        # else:
-        #     context = {
-        #         "error" : True,
-        #         "message" : "Invalid email or pasword"
-        #     }
-        #     return render(request, 'faculty/flogin.html', context=context)
+                context = {
+                    "error": True,
+                    "message": "Invalid Register Id or Password"
+                }
+                return render(request, 'parents/plogin.html', context=context)
+        except User.DoesNotExist:
+            context = {
+                "error": True,
+                "message": "Invalid Register Id or Password"
+            }
+            return render(request, 'parents/plogin.html', context=context)
     else:
-        return render(request, 'faculty/flogin.html')
-    
+        return render(request, 'parents/plogin.html')
 
 
 
@@ -134,6 +129,8 @@ def register(request):
     else:
         return render(request, 'faculty/register.html')
     
+
+    
 @login_required(login_url='faculty:login') 
 def register_id(request):
     user=request.user
@@ -144,7 +141,8 @@ def register_id(request):
     }
     return render(request, 'faculty/register_id.html', context=context)
 
-
+@login_required(login_url='faculty:login')
+@allow_faculty
 def fstudentadd(request):
     students = Student.objects.all()
     if request.method == 'POST':
@@ -155,14 +153,16 @@ def fstudentadd(request):
         password = request.POST.get('password')
         register_id = request.POST.get('register_id')
         hostelid = request.POST.get('hostelid')
+        guardianename = request.POST.get('guardianename')
         guardianemail = request.POST.get('guardianemail')
 
-        if User.objects.filter(email=email).exists():
+        if User.objects.filter(Q(email=email) | Q(register_id=register_id)).exists():
+        
             context = {
                 "error" : True,
-                "message" : "Email already registered"
+                "message" : "Email or register ID already registered"
             }
-            return render(request, 'faculty/register.html', context=context)
+            return render(request, 'faculty/fstudentadd.html', context=context)
         else:
             user = User.objects.create_user(
                 email=email,
@@ -173,6 +173,7 @@ def fstudentadd(request):
                 student_name=studentname,
                 register_id=register_id,
                 hostel_id=hostelid,
+                guardian_name=guardianename,
                 guardian_email=guardianemail,
                 is_student=True
             )
@@ -189,7 +190,8 @@ def fstudentadd(request):
 
 
 
-
+@login_required(login_url='faculty:login')
+@allow_faculty
 def falert(request):
     user=request.user
     alerts= Alert.objects.all()
@@ -205,7 +207,8 @@ def falert(request):
     else:
         return render(request, 'faculty/falert.html', {"alerts": alerts})
     
-
+@login_required(login_url='faculty:login')
+@allow_faculty
 def alert_delete(request, id):
     alert = Alert.objects.get(id=id)
     alert.delete()
@@ -228,8 +231,8 @@ def alert_delete(request, id):
 
 
 
-
-@login_required
+@login_required(login_url='faculty:login')
+@allow_faculty
 def attendance(request):
     students = Student.objects.all()
     attendance_records = Attendance.objects.all()
@@ -243,7 +246,8 @@ def attendance(request):
 
     return render(request, 'faculty/attendance.html', context=context)
 
-@login_required
+@login_required(login_url='faculty:login')
+@allow_faculty
 def mark_attendance(request):
     for student in Attendance.objects.all():
         student.delete()
@@ -257,8 +261,8 @@ def mark_attendance(request):
         )
     return redirect('faculty:fattendance')
 
-
-@login_required
+@login_required(login_url='faculty:login')
+@allow_faculty
 def update_attendance(request, id):
     attendance_record = Attendance.objects.get(id=id)
     attendance_status = request.POST.get('attendance_status')
@@ -269,16 +273,18 @@ def update_attendance(request, id):
     return redirect('attendance')
 
 
-
+@login_required(login_url='faculty:login')
+@allow_faculty
 def ffood(request):
     days = Day.objects.all()
     meals = Menu.objects.all()
-    i = Day.objects.get(id=1)
-    food_selection = FoodSelection.objects.filter(day=i)
+    today = datetime.today()
+    day_of_the_week = today.strftime('%A')
 
-    if request.method == 'GET':
-        day = request.GET.get('day')
-        food_selection = FoodSelection.objects.filter(day=day)
+    for day in days:
+        if day.name == day_of_the_week:
+            food_selection = FoodSelection.objects.filter(day=day)
+
 
     if request.method == 'POST':
         day_id = request.POST.get('day')
@@ -301,9 +307,10 @@ def ffood(request):
 
         return redirect('faculty:ffood')
     else:
-        return render(request, 'faculty/ffood.html', {'days': days, 'meals': meals, 'food_selection': food_selection})
+        return render(request, 'faculty/ffood.html', {'days': days, 'day_of_the_week': day_of_the_week, 'meals': meals, 'food_selection': food_selection})
 
-
+@login_required(login_url='faculty:login')
+@allow_faculty
 def update_food_selection(request):
     day = request.GET.get('day')
     food_selection = FoodSelection.objects.filter(day=day)
@@ -317,35 +324,36 @@ def get_current_date(request):
     current_date = date.today().strftime("%Y-%m-%d")
     return JsonResponse({'current_date': current_date})
 
+@login_required(login_url='faculty:login')
+@allow_faculty
 def ffee(request):
     today = date.today()
     fees = Fee.objects.all()
     students = Student.objects.all()
     paid_students = []
     unpaid_students = []
-
+    month=datetime.now().strftime("%b")
     for student in students:
         if Fee.objects.filter(student=student).exists():
             paid_students.append(student)
         else:
             unpaid_students.append(student)
     
-    if fees:
-        pass
-    else:
-        for student in students:
-            Fee.objects.create(student=student)
+    for student in students:
+        Fee.objects.get_or_create(student=student)
     
     context = {
         'fees': fees,
         'today': today,
+        'month': month,
         'unpaid_students': unpaid_students,
         'paid_students': paid_students,
         'students': students,
     }
     return render(request, 'faculty/ffee.html', context=context)
 
-
+@login_required(login_url='faculty:login')
+@allow_faculty
 @login_required
 def change_date(request):
     last_date = request.POST.get('last_date')
@@ -356,7 +364,8 @@ def change_date(request):
     return redirect('faculty:ffee')
 
 
-@login_required
+@login_required(login_url='faculty:login')
+@allow_faculty
 def mark_fee(request, pk):
     today = date.today()
     fee = Fee.objects.get(pk=pk)
@@ -367,7 +376,8 @@ def mark_fee(request, pk):
 
 
 
-@login_required
+@login_required(login_url='faculty:login')
+@allow_faculty
 def delete_fee(request, pk):
     fee = Fee.objects.get(pk=pk)
     fee.status = 'unpaid'
@@ -378,16 +388,14 @@ def delete_fee(request, pk):
 
 
 
-@login_required
+@login_required(login_url='faculty:login')
+@allow_faculty
 def fcheck(request):
     students = Student.objects.all()
     form = CheckInCheckOut.objects.all()
-
-    if form:
-        pass
-    else:
-        for student in students:
-            CheckInCheckOut.objects.create(student=student)
+    
+    for student in students:
+        CheckInCheckOut.objects.get_or_create(student=student)
             
     context = {
         'form': form,
@@ -396,7 +404,8 @@ def fcheck(request):
     return render(request, 'faculty/fcheck.html', context=context)
 
 
-@login_required
+@login_required(login_url='faculty:login')
+@allow_faculty
 def check_in(request, pk):
     time = datetime.now()
     instance = CheckInCheckOut.objects.get(pk=pk)
@@ -407,7 +416,8 @@ def check_in(request, pk):
     return redirect('faculty:fcheck')
 
 
-@login_required
+@login_required(login_url='faculty:login')
+@allow_faculty
 def check_out(request, pk):
     time = datetime.now()
     instance = CheckInCheckOut.objects.get(pk=pk)
@@ -417,7 +427,8 @@ def check_out(request, pk):
 
     return redirect('faculty:fcheck')
 
-@login_required
+@login_required(login_url='faculty:login')
+@allow_faculty
 def cancel_check_in(request, pk):
     instance = CheckInCheckOut.objects.get(pk=pk)
 
@@ -427,7 +438,8 @@ def cancel_check_in(request, pk):
     return redirect('faculty:fcheck')
 
 
-@login_required
+@login_required(login_url='faculty:login')
+@allow_faculty
 def cancel_check_out(request, pk):
     instance = CheckInCheckOut.objects.get(pk=pk)
 
@@ -436,7 +448,8 @@ def cancel_check_out(request, pk):
 
     return redirect('faculty:fcheck')
 
-
+@login_required(login_url='faculty:login')
+@allow_faculty
 def fcomplaint(request):
     instances = Complaint.objects.all()
     new = instances.order_by('-id')[:3]
@@ -447,6 +460,9 @@ def fcomplaint(request):
     }
     return render(request, 'faculty/fcomplaint.html', context=context)
 
+
+@login_required(login_url='faculty:login')
+@allow_faculty
 def fslot(request):
     instances = Slot.objects.all()
     
@@ -458,40 +474,35 @@ def fslot(request):
 
 
 
-def fchangepass(request):
-    
 
-    context = {
-     
-    }
-    return render(request, 'faculty/fchangepass.html', context=context)
-
-
-
-
-
-
-
-def fforgetpass(request):
-    
-
-    context = {
-     
-    }
-    return render(request, 'faculty/fforgetpass.html', context=context)
-
+@login_required(login_url='faculty:login')
+@allow_faculty
 def fprofile(request):
-    
+    user = request.user
+    profile, created = Profile.objects.get_or_create(user=user)
 
-    context = {
-     
-    }
-    return render(request, 'faculty/fprofile.html', context=context)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        phone_number = request.POST.get('phone_number')
+        hostel_id = request.POST.get('hostel_id')
+        register_no = request.POST.get('register_no')
+        department = request.POST.get('department')
+        address = request.POST.get('address')
+        guardian_name = request.POST.get('guardian_name')
+        guardian_number = request.POST.get('guardian_number')
 
-def fupdatepass(request):
-    
+        profile.name = name
+        profile.phone_number = phone_number
+        profile.hostel_id = hostel_id
+        profile.register_no = register_no
+        user.register_id = register_no
+        profile.department = department
+        profile.address = address
+        profile.guardian_name = guardian_name
+        profile.guardian_number = guardian_number
+        profile.save()
+    return render(request, 'faculty/fprofile.html', {'profile': profile})
 
-    context = {
-     
-    }
-    return render(request, 'faculty/fupdatepass.html', context=context)
+
+
+

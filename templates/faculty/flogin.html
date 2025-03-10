@@ -24,7 +24,7 @@
                     <input required type="text" name="password" placeholder="Password" id="loginpassword" class="focus:outline-none w-[330px] border-opacity-40 h-[39px] mt-2   border-blue-950 border-b-2 bg-[#F4F6FC] pl-4">
 
                     <div class="mt-12 flex justify-between w-[330px]">
-                        <a class=" text-[12px] text-[#2c2c56] font-[500] pt-2">Forgot your password?</a>
+                        <a href="{% url 'faculty:fforgetpass' %}" class=" text-[12px] text-[#2c2c56] font-[500] pt-2">Forgot your password?</a>
                     
                          <button type="submit" id="loginbutton" class=" bg-[#2c2c56] w-[2.5cm]  text-center text-[14px] rounded-md py-[6px] px-5 text-white font-semibold">login</button>
                     </div>

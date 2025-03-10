@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'faculty',
     'parents',
     'student',
+    'main',
 ]
 
 MIDDLEWARE = [
@@ -68,7 +69,7 @@ WSGI_APPLICATION = 'hostal_main.wsgi.application'
 DATABASES = {
     'default': {
         "ENGINE" : "django.db.backends.postgresql_psycopg2",
-        "NAME" : "hostel3",
+        "NAME" : "hostel5",
         "HOST" : "localhost",
         "USER" : "sahal",
         "PASSWORD" : "1234",

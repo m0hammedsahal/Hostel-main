@@ -8,23 +8,24 @@
             <div class="w-auto h-full  pl-[10%] " >
                
                 <h1 class="font-bold text-blue-950 text-[30px]  pt-10">PROFILE</h1>
-                <form action="" class="mt-6 ">
-                    <input required type="text" placeholder="Enter your name" id="name" class=" focus:outline-none w-[330px] border-opacity-40 h-[39px] mt-2  rounded-lg  border-blue-950 border-2 bg-[#F4F6FC] pl-4"><br><br>
+                <form method="post" action="" class="mt-6 ">
+                    {% csrf_token %}
+                    <input required value="{% if profile.name %}{{profile.name}}{% endif %}" name="name" type="text" placeholder="Enter your name" id="name" class=" focus:outline-none w-[330px] border-opacity-40 h-[39px] mt-2  rounded-lg  border-blue-950 border-2 bg-[#F4F6FC] pl-4"><br><br>
 
-                    <input required type="text" placeholder="Enter your phone  number" id="phno" class=" focus:outline-none w-[330px] border-opacity-40 h-[39px] mt-2  rounded-lg  border-blue-950 border-2 bg-[#F4F6FC] pl-4"><br><br>
+                    <input required value="{% if profile.phone_number %}{{profile.phone_number}}{% endif %}" name="phone_number" type="text" placeholder="Enter your phone  number" id="phno" class=" focus:outline-none w-[330px] border-opacity-40 h-[39px] mt-2  rounded-lg  border-blue-950 border-2 bg-[#F4F6FC] pl-4"><br><br>
 
-                    <input required type="text" placeholder="hostel ID" id="signhostelID" class=" focus:outline-none w-[330px] border-opacity-40 h-[39px] mt-2  rounded-lg  border-blue-950 border-2 bg-[#F4F6FC] pl-4"><br><br>
+                    <input required value="{% if profile.hostel_id %}{{profile.hostel_id}}{% endif %}" name="hostel_id" type="text" placeholder="hostel ID" id="signhostelID" class=" focus:outline-none w-[330px] border-opacity-40 h-[39px] mt-2  rounded-lg  border-blue-950 border-2 bg-[#F4F6FC] pl-4"><br><br>
                    
-                    <input required type="text" placeholder="Register number" id="Registerid" class=" focus:outline-none w-[330px] border-opacity-40 h-[39px] mt-2  rounded-lg  border-blue-950 border-2 bg-[#F4F6FC] pl-4"><br><br>
+                    <input required value="{% if profile.register_no %}{{profile.register_no}}{% endif %}" name="register_no" type="text" placeholder="Register number" id="Registerid" class=" focus:outline-none w-[330px] border-opacity-40 h-[39px] mt-2  rounded-lg  border-blue-950 border-2 bg-[#F4F6FC] pl-4"><br><br>
 
-                    <input required type="text" placeholder="Department" id="password" class="focus:outline-none w-[330px] border-opacity-40 h-[39px] mt-2  rounded-lg  border-blue-950 border-2 bg-[#F4F6FC] pl-4"><br><br>
+                    <input required value="{% if profile.department %}{{profile.department}}{% endif %}" name="department" type="text" placeholder="Department" id="password" class="focus:outline-none w-[330px] border-opacity-40 h-[39px] mt-2  rounded-lg  border-blue-950 border-2 bg-[#F4F6FC] pl-4"><br><br>
 
-                    <textarea required name="address"  id="address" placeholder="Address" class=" pt-[6px] focus:outline-none w-[330px] border-opacity-40 h-[39px] mt-2  rounded-lg  border-blue-950 border-2 bg-[#F4F6FC] pl-4"></textarea>
+                    <input required value="{% if profile.address %}{{profile.address}}{% endif %}" name="address"  id="address" placeholder="Address" class=" pt-[6px] focus:outline-none w-[330px] border-opacity-40 h-[39px] mt-2  rounded-lg  border-blue-950 border-2 bg-[#F4F6FC] pl-4"></input>
                     
                     <div class="flex justify-end">
-                        <button id="signupbutton" class="  block bg-[#2c2c56] mt-8  text-center text-[14px] rounded-md py-[6px] px-5 text-white font-semibold">Edit</button>
+                        <!-- <button id="signupbutton" class="  block bg-[#2c2c56] mt-8  text-center text-[14px] rounded-md py-[6px] px-5 text-white font-semibold">Edit</button> -->
                     
-                        <button id="signupbutton" class="ml-5    block bg-[#2c2c56] mt-8 text-center text-[14px] rounded-md py-[6px] px-5 text-white font-semibold">Save</button>
+                        <button type="submit" id="" class="ml-5    block bg-[#2c2c56] mt-8 text-center text-[14px] rounded-md py-[6px] px-5 text-white font-semibold">Save</button>
                     </div>
                 </form>
             </div>
@@ -34,6 +35,6 @@
             </div>
         </div>
     </section>
-    
- 
+
+
     {% endblock %}

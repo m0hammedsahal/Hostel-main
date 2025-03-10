@@ -5,10 +5,8 @@ from parents.views import pnotification
 app_name = "faculty"
 
 urlpatterns = [
-    path("index/", views.index, name="index"),
-    path("", views.fdashbord, name="fdashbord"),\
+    path("", views.fdashbord, name="fdashbord"),
     path("login/", views.login, name="login"),
-    path("register/", views.register, name="register"),
     path("register_id/", views.register_id, name="register_id"),
     path("studentadd/", views.fstudentadd, name="fstudentadd"),
     path("alert/", views.falert, name="falert"),
@@ -28,13 +26,8 @@ urlpatterns = [
     path("cancel_check_out/<pk>/", views.cancel_check_out, name="cancel_check_out"),
     path("notification/", pnotification, name="fnotification"),
     path("slot/", views.fslot, name="fslot"),
-
-
-    path("changepass/", views.fchangepass, name="fchangepass"),
     path("complaint/", views.fcomplaint, name="fcomplaint"),
     path("food/", views.ffood, name="ffood"),
-    path("forgetpass/", views.fforgetpass, name="fforgetpass"),
     path("profile/", views.fprofile, name="fprofile"),
-    path("updatepass/", views.fupdatepass, name="fupdatepass"),
 
 ]

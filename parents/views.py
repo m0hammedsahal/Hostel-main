@@ -22,18 +22,12 @@ import string
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
 from django.http import JsonResponse
+from main.decorators import allow_parent
+from datetime import datetime
+from datetime import date
 
 
 
-
-# @login_required(login_url='web:login') 
-def index(request):
-    
-
-    context = {
-     
-    }
-    return render(request, 'index.html', context=context)
 
 def login(request):
     if request.method == 'POST':
@@ -41,35 +35,44 @@ def login(request):
         password = request.POST.get('password')
         try:
             user = User.objects.get(register_id=register_id)
-            if user.second_pass == password and user.is_parents:
-                auth_login(request, user)
-                print('valid')
-                return HttpResponseRedirect(reverse('faculty:fdashbord'))
+            if user.second_pass == password:
+                if user.is_parents:
+                    auth_login(request, user)
+                    print('valid')
+                    return HttpResponseRedirect(reverse('parents:pdashbord'))
+                else:
+                    context = {
+                        "error": True,
+                        "message": "You are not Parent"
+                    }
+                    return render(request, 'parents/plogin.html', context=context)
             else:
                 context = {
                     "error": True,
                     "message": "Invalid Register Id or Password"
                 }
-                return render(request, 'faculty/flogin.html', context=context)
+                return render(request, 'parents/plogin.html', context=context)
         except User.DoesNotExist:
             context = {
                 "error": True,
                 "message": "Invalid Register Id or Password"
             }
-            return render(request, 'faculty/flogin.html', context=context)
+            return render(request, 'parents/plogin.html', context=context)
     else:
         return render(request, 'parents/plogin.html')
 
 
 
-def pdashbord(request):
-    
 
+@login_required(login_url='parents:login')
+@allow_parent
+def pdashbord(request):
     context = {
     }
     return render(request, 'parents/pdashbord.html', context=context)
 
-
+@login_required(login_url='parents:login')
+@allow_parent
 def pattendance(request):
     instances = Attendance.objects.all()
 
@@ -78,6 +81,8 @@ def pattendance(request):
     }
     return render(request, 'parents/pattendance.html', context=context)
 
+@login_required(login_url='parents:login')
+@allow_parent
 def pcheck(request):
     instances = CheckInCheckOut.objects.all()
 
@@ -87,16 +92,21 @@ def pcheck(request):
     return render(request, 'parents/pcheck.html', context=context)
 
 
+@login_required(login_url='parents:login')
+@allow_parent
 def pfee(request):
     instances = Fee.objects.all()
-
+    month=datetime.now().strftime("%b")
     context = {
         'instances': instances,
+        'month': month,
     }
     return render(request, 'parents/pfee.html', context=context)
 
 
 
+@login_required(login_url='parents:login')
+@allow_parent
 def pnotification(request):
     instances = Notification.objects.all()
     new = instances.order_by('-id')[:3]
@@ -109,27 +119,4 @@ def pnotification(request):
     return render(request, 'parents/pnotificaton.html', context=context)
 
 
-def pchangepass(request):
-    
-
-    context = {
-     
-    }
-    return render(request, 'parents/pchangepass.html', context=context)
-
-
-def pforgetpass(request):
-    
-
-    context = {
-     
-    }
-    return render(request, 'parents/pforgetpass.html', context=context)
-def pupupdatepass(request):
-    
-
-    context = {
-     
-    }
-    return render(request, 'parents/pupdatepass.html', context=context)
 

@@ -77,6 +77,7 @@
             opacity: 1;
         }
         }
+        
 
     </style>
 
@@ -92,19 +93,25 @@
                 <div class="grid grid-cols-7 gap-4 mb-3">
                   {% for day in days %}
                     <div class="bg-white rounded-xl shadow-md p-4">
-                      <h3 class="text-lg font-bold text-center mb-2">{{ day.name }}</h3>
-                      <ul>
-                        {% for food in food_selections %}
-                          {% if food.day == day %}
-                            <li class="flex justify-between items-center p-2 border-b border-gray-200">
-                              <label for="eveningsnaks" class="block my-3 ml-2">{{ food.get_meal_display }}</label>
-                              <input type="checkbox" value="{{ food.id }}" class="eveningsnaks w-5 rounded-full" style="width: 20px;">
-                            </li>
-                          {% endif %}
-                        {% endfor %}
-                      </ul>
+                    <h3 class="text-lg font-bold text-center mb-2">{{ day.name }}</h3>
+                    <ul>
+                      {% for food in food_selections %}
+                        {% if food.day == day %}
+                        <li class="flex justify-between items-center p-2 border-b border-gray-200">
+                        <label for="meal" class="block my-3 ml-2">{{ food.get_meal_display }}</label>
+                          <input type="checkbox" {% if user in food.user.all %}checked{% endif %} value="{{ food.id }}" class="{% if food.meal == 'breakfast' %} {{ day.name|lower }}-breakfast
+                          {% elif food.meal == 'lunch' %} {{ day.name|lower }}-lunch
+                          {% elif food.meal == 'evening_snacks' %} {{ day.name|lower }}-evening_snacks
+                          {% elif food.meal == 'dinner' %} {{ day.name|lower }}-dinner
+                          {% endif %} meal w-5 rounded-full" style="width: 20px;">
+                        </li>
+                        <img src=".../" alt="">
+                        {% endif %}
+                      {% endfor %}
+                    </ul>
                     </div>
                   {% endfor %}
+
                 </div>
                 <div class="selected-meals mt-4" id="selected-meals">
                   <h2 class="text-lg font-bold mb-2">Your Meals Selected</h2>
@@ -211,6 +218,63 @@
         });
         });
 
+
+        const today = new Date();
+        const currentDay = today.toLocaleString('en-us', { weekday: 'long' }).toLowerCase();
+
+        const breakfastMeals = document.querySelectorAll(`.${currentDay}-breakfast`);
+        const lunchMeals = document.querySelectorAll(`.${currentDay}-lunch`);
+        const eveningSnackMeals = document.querySelectorAll(`.${currentDay}-evening_snacks`);
+        const dinnerMeals = document.querySelectorAll(`.${currentDay}-dinner`);
+
+        function checkTime() {
+          const currentTime = new Date();
+          const hours = currentTime.getHours();
+          const minutes = currentTime.getMinutes();
+
+          if (hours >= 4 && minutes >= 0 && hours < 8) {
+            breakfastMeals.forEach((meal) => {
+              meal.disabled = true;
+            });
+          } else if (hours >= 8 && minutes >= 0) {
+            breakfastMeals.forEach((meal) => {
+              meal.disabled = false;
+            });
+          }
+
+          if (hours >= 8 && minutes >= 0 && hours < 12) {
+            lunchMeals.forEach((meal) => {
+              meal.disabled = true;
+            });
+          } else if (hours >= 12 && minutes >= 0) {
+            lunchMeals.forEach((meal) => {
+              meal.disabled = false;
+            });
+          }
+
+          if (hours >= 13 && minutes >= 0 && hours < 17 && minutes < 30) {
+            eveningSnackMeals.forEach((meal) => {
+              meal.disabled = true;
+            });
+          } else if (hours >= 17 && minutes >= 30) {
+            eveningSnackMeals.forEach((meal) => {
+              meal.disabled = false;
+            });
+          }
+
+          if (hours >= 16 && minutes >= 0 && hours < 23 && minutes < 30) {
+            dinnerMeals.forEach((meal) => {
+              meal.disabled = true;
+            });
+          } else if (hours >= 23 && minutes >= 30) {
+            dinnerMeals.forEach((meal) => {
+              meal.disabled = false;
+            });
+          }
+        }
+
+        setInterval(checkTime, 60000);
+        checkTime();
 
 
 

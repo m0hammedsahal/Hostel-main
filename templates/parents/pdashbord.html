@@ -7,11 +7,8 @@
 
     <section class="w-full h-screen bg-gradient-to-t  from-[rgb(198,225,248)] to-[#79e5fb]">
         <div class="header h-[10vh]     flex justify-end gap-4 pr-20 items-center">
-            <a class="text-[15px] font-semibold ml-6  hover:text-white " href="./pupdatepass.html">Update password</a>
-            <a class="text-[15px] font-semibold ml-6  hover:text-white " href="../index.html">Logout</a>
-
-            
-
+            <a class="text-[15px] font-semibold ml-6  hover:text-white " href="{% url 'web:updatepass' %}">Update password</a>
+            <a class="text-[15px] font-semibold ml-6  hover:text-white " href="{% url 'web:logout' %}">Logout</a>
         </div>
         
         <div class="w-full h-auto">
@@ -23,7 +20,7 @@
                 <a class=" h-[2cm] w-[14cm] block bg-orange-50 text-center pt-6 rounded-xl  hover:border-2 hover:border-blue-300 hover:shadow-lg  font-semibold text-[18px] " href="{% url 'parents:pattendance' %}">ATTENDENCE</a>
                 <a class=" h-[2cm] w-[14cm] block bg-orange-50 text-center pt-6 rounded-xl  hover:border-2 hover:border-blue-300 hover:shadow-lg  font-semibold text-[18px]  " href="{% url 'parents:pcheck' %}">CHECK IN/CHECK OUT</a>
                 <a class=" h-[2cm] w-[14cm] block bg-orange-50 text-center pt-6 rounded-xl  hover:border-2 hover:border-blue-300 hover:shadow-lg  font-semibold text-[18px]  " href="{% url 'parents:pfee' %}">FEE </a>             
-                <a class=" h-[2cm] w-[14cm] block bg-orange-50 text-center pt-6 rounded-xl  hover:border-2 hover:border-blue-300 hover:shadow-lg  font-semibold text-[18px]  " href="{% url 'parents:pnotificaton' %}">NOTIFICATION</a>
+                <a class=" h-[2cm] w-[14cm] block bg-orange-50 text-center pt-6 rounded-xl  hover:border-2 hover:border-blue-300 hover:shadow-lg  font-semibold text-[18px]  " href="{% url 'parents:pnotification' %}">NOTIFICATION</a>
 
             </div>
 

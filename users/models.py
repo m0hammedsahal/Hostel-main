@@ -43,17 +43,15 @@ class User(AbstractUser):
 
 
 
-
-
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255, null=True, blank=True)
-    phone_number = models.ImageField(max_length=255, null=True, blank=True)
-    hostel_id = models.ImageField(max_length=255, null=True, blank=True)
-    hostel_id = models.ImageField(max_length=255, null=True, blank=True)
-    register_no = models.CharField(max_length=255, null=True, blank=True)
-    guardian_name = models.CharField(max_length=255, null=True, blank=True)
-    guardian_number = models.ImageField(max_length=255, null=True, blank=True)
+    name = models.CharField(max_length=20, null=True, blank=True)
+    phone_number = models.BigIntegerField(null=True, blank=True)
+    hostel_id = models.CharField(max_length=20, null=True, blank=True)
+    register_no = models.CharField(max_length=20, null=True, blank=True)
+    guardian_name = models.CharField(max_length=20, null=True, blank=True)
+    guardian_number = models.BigIntegerField(null=True, blank=True)
+    department = models.CharField(max_length=20, null=True, blank=True)
     address = models.TextField(null=True, blank=True)
 
     class Meta:
@@ -64,6 +62,7 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
 
 
 

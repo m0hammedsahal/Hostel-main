@@ -10,9 +10,10 @@ from student import urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include ("web.urls", namespace="web")),
-    path('facultys/', include ("faculty.urls", namespace="faculty")),
-    path('parents/', include ("parents.urls", namespace="parents")),
-    path('students/', include ("student.urls", namespace="student")),
+    path('faculty/', include ("faculty.urls", namespace="faculty")),
+    path('parent/', include ("parents.urls", namespace="parents")),
+    path('student/', include ("student.urls", namespace="student")),
+
 ]
 
 if settings.DEBUG:

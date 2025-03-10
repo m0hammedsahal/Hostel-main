@@ -9,15 +9,7 @@
             <div class="w-full h-[auto] bg-green-50 rounded-2xl mt-6 px-5 mb-11 pb-14">
                 <h3 class="pt-3 font-semibold text-[25px] mb-4  text-blue-950 ">Toatl  Count:</h3>
                 <br>
-                <form method="get" action="" >
-                {% csrf_token %}
-                <select name="day" id="day" class="font-bold text-[25px] mb-4 mt-6 ml-6 bg-inherit">
-                    {% for day in days %}
-                        <option value="{{ day.id }}">{{ day.name }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Change Day</button>
-                </form>
+                <h3 class="font-bold text-[25px]  mb-4 mt-6 ml-6 bg-inherit">{{ day_of_the_week }}</h3>
                 <table id="food-table" class="table-auto border-collapse border border-gray-300 bg-white shadow-lg w-full">
                     <thead>
                         <tr class="bg-blue-200 text-gray-700 uppercase text-sm">
@@ -193,12 +185,17 @@
             lists[currentDay][mealType].push(value);
             // input.value = ""; 
             updateUI();
+
         }
     };
 
-    const deleteItem = (mealType, index) => {
+    const deleteItem = (mealType, index, inputSelector) => {
+        const input = document.querySelector(inputSelector);
         lists[currentDay][mealType].splice(index, 1);
         updateUI();
+        console.log(input.value)
+        input.value = '';
+
     };
 
     // Event listeners for Add buttons

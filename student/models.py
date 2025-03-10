@@ -28,6 +28,13 @@ class FoodSelection(models.Model):
     meal = models.CharField(max_length=15, choices=MEAL_CHOICES, null=True, blank=True)
     selected = models.BooleanField(default=False)
 
+
+    class Meta:
+        db_table = 'student_food_selection'
+        verbose_name = 'food_selection'
+        verbose_name_plural = 'food_selections'
+        ordering = ['id']
+
     def __str__(self):
         return f"{self.day} - {self.meal}"
 
